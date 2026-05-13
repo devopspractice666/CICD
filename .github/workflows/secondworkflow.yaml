@@ -1,0 +1,20 @@
+name: second workflow
+on: push
+
+jobs:
+  run-first-command:
+    runs-on: ubuntu-latest
+    steps:
+      - name: step1
+        run: echo "text"
+  run-parallel-command:
+    runs-on: windows-latest
+    steps:
+      - name: step2
+        run: node -v
+  run-after-first:
+    runs-on: macos-latest
+    needs: [run-first-command]
+    steps:
+      - name: node version on mac
+        run: node -v

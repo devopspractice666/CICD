@@ -1,2 +1,8 @@
-отключение workflow в настройках github -> disable workflow -> коммит без запуска workflow
-в тексте коммита пишем [actions skip]
+отключение workflow:
+1) в настройках github -> disable workflow -> коммит без запуска workflow
+2) в тексте коммита пишем [actions skip]
+3) on: [workflow_dispatch] (будет кнопка для запуска воркфлоу на гитхабе)
+
+
+зависимости job:
+needs:[]  -> указание джоб после которых будет запускаться следующая джоба
