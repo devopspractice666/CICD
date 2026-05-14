@@ -1,4 +1,4 @@
-name: First workflow
+name: 3workflow
 on: push
 
 jobs: 

@@ -1,0 +1,14 @@
+name: 4workflow 
+on: 
+  workflow_run:
+    workflows: [3workflow]
+    types:
+      - completed
+
+jobs: 
+  run-first-command:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display some text
+        run: echo hello
+     
