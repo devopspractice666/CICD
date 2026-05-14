@@ -1,0 +1,12 @@
+name: First workflow
+on: push
+
+jobs: 
+  run-first-command:
+    runs-on: ubuntu-latest
+    steps:
+      - name: command 
+        run:  ls -la
+      - uses: actions/checkout@v4  
+      - name: list files
+        run: ls -la
