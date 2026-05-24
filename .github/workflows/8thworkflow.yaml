@@ -1,0 +1,9 @@
+name: 8th
+on:
+  workflow_dispatch
+jobs:
+  myjob:
+    runs-on: ubuntu latest
+    steps:
+      - name: test
+        run: echo test
