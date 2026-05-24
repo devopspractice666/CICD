@@ -4,7 +4,7 @@ on:
     branches:
       - main   
     paths:
-      - "**.info"
+      - "**/info"
 jobs:
     main:
       runs-on: ubuntu-latest
