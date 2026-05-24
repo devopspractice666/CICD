@@ -4,3 +4,14 @@ on.schedule:
 минута час день месяца месяц день недели
 есть онлайн генератор крон формата
 - cron: "*/2 * * * *" // каждые две минуты как пример
+гитхаб во время нагрузки может отложить наш шедул
+
+on.workflow_dispatch // запуск при помощи кнопки
+inputs:
+        titleCustom:
+          description: type the title
+          type: string
+          required: true
+          default: "Hello world"
+
+          добавление интерактивного поля для диспатч

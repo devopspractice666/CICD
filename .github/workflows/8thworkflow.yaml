@@ -1,6 +1,12 @@
 name: 8th
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+        titleCustom:
+          description: type the title
+          type: string
+          required: true
+          default: "Hello world"
 jobs:
   myjob:
     runs-on: ubuntu latest
