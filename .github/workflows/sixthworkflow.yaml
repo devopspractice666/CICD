@@ -5,6 +5,10 @@ on:
       - main   
     paths:
       - "**/info"
+  issues:
+    types: [edited, deleted]
+  pull_request:
+    types: [assigned, closed]
 jobs:
     main:
       runs-on: ubuntu-latest
