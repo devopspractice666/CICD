@@ -31,3 +31,15 @@ inputs:
           есть с вводом строки, выбором параметра и с булевым полем
 
 ${{ inputs.titleCustom }} получение поля в самом теле воркфлоу
+
+
+workflow_dispatch через restapi
+генерация токена в гитхабе для репозитория с actions read and write
+токен в заголовке поле accept поле версии
+пост запрос (все в документации)
+refs:(ветка) inputs:(инпуты)
+
+repository_dispatch
+для удаленного запуска без кнопки
+on.repository_dispatch.types
+{{ github.event.client_payload.titleTest }}
