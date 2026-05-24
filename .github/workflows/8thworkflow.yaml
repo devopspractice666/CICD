@@ -7,6 +7,19 @@ on:
           type: string
           required: true
           default: "Hello world"
+        selectCustom:
+          description: select value
+          type: choice
+          required: true
+          options:
+            - value1
+            - value2
+            - value3
+          default: value2
+        checkCustom:
+          description: checkbox
+          type: boolean
+          required: false
 jobs:
   myjob:
     runs-on: ubuntu-latest

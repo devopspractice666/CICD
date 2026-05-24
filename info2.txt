@@ -13,7 +13,21 @@ inputs:
           type: string
           required: true
           default: "Hello world"
+        selectCustom:
+          description: select value
+          type: choice
+          required: true
+          options:
+            - value1
+            - value2
+            - value3
+          default: value2
+        checkCustom:
+          description: checkbox
+          type: boolean
+          required: false
 
           добавление интерактивного поля для диспатч
+          есть с вводом строки, выбором параметра и с булевым полем
 
 ${{ inputs.titleCustom }} получение поля в самом теле воркфлоу
