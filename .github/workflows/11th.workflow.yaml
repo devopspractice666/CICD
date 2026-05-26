@@ -9,4 +9,8 @@ jobs:
     steps:
       - name: try to launch
         if: ${{ env.global_for_wf == '10 text' }}
-        run: echo "test was successful"
+        run: |
+          echo "test was successful"
+          echo $GITHUB_ENV
+          cd $GITHUB_ENV
+          ls -la
