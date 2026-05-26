@@ -1,5 +1,6 @@
 name: tenth
 on: [push]
+run-name: testing header of commit 
 jobs:
   mujob:
     runs-on: ubuntu-latest
@@ -10,4 +11,6 @@ jobs:
           echo '${{ toJson(github) }}'
           echo '${{ toJson(runner) }}'
           echo '${{ toJson(job) }}'
-          echo '${{ toJson(steps) }}'
+      - name: second
+        id: haha
+        run: echo '${{ toJson(steps) }}'
