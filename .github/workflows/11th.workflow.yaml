@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: first
         id: id
-        run: |
-          if: ${{ env.global_for_wf == '10 text'}}
+        if: ${{ env.global_for_wf == '10 text'}}
+        run: |      
           echo "test was successful"
         
