@@ -1,0 +1,8 @@
+name: tenth
+on: [push]
+jobs:
+  mujob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: first
+        run: echo ${{toJson(github)}}
