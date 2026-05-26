@@ -19,3 +19,9 @@ jobs:
       - name: failure
         if: ${{ failure() }}
         run: echo "failure launch"
+  second:
+    runs-on: ubuntu-latest
+    needs: myjob
+    if: ${{ failure() }}
+    steps:
+      - run: echo "job was failed"
