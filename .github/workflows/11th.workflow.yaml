@@ -2,14 +2,11 @@ name: envs
 on: [push]
 run-name: test
 env:
-  global_for_wf: 10 text
+  global_for_wf: "10 text"
 jobs:
   job:
     runs-on: ubuntu-latest
     steps:
       - name: first
-        id: id
-        if: ${{ env.global_for_wf == '10 text'}}
-        run: |      
-          echo "test was successful"
-        
+        if: ${{ env.global_for_wf == '10 text' }}
+        run: echo "test was successful"
