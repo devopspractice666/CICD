@@ -1,0 +1,21 @@
+name: functions workflow
+on: workflow_dispatch
+run-name: working 
+jobs:
+  myjob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: first_step
+        run: sleep 30
+      - name: runs on calcelled
+        if: ${{ cancelled() }}
+        run: echo "runs on cancelled"
+      - name: always
+        if: ${{ always() }}
+        run: echo "always launch"
+      - name: success
+        if: ${{ success() }}
+        run: echo "success launch"
+      - name: failure
+        if: ${{ failure() }}
+        run: echo "failure launch"
