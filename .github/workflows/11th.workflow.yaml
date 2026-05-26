@@ -12,5 +12,3 @@ jobs:
         run: |
           echo "test was successful"
           echo $GITHUB_ENV
-          cd $GITHUB_ENV
-          ls -la
