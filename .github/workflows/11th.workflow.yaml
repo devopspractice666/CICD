@@ -2,10 +2,11 @@ name: envs
 on: [workflow_dispatch]
 run-name: test
 env:
-  global_for_wf: "10 text"
+  global_for_wf: 10
 jobs:
   job:
     runs-on: ubuntu-latest
     steps:
       - name: try to launch
+        if: ${{ env.global_for_wf == 10 }}
         run: echo "test was successful"
