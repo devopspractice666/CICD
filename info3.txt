@@ -87,4 +87,5 @@ job.<jobname>.environment
 
 
  для связки конкретных шагов нужно задавать id
- && steps.<id>.conclusion Добавляется в выражении
+&& steps.<id>.conclusion =='failure' Добавляется в выражении
+вместо failure по умолчанию стоит success

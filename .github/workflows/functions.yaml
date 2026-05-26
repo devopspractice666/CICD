@@ -18,7 +18,7 @@ jobs:
         if: ${{ success() }}
         run: echo "success launch"
       - name: failure
-        if: ${{ failure() && steps.sleep.conclusion }}
+        if: ${{ failure() && steps.sleep.conclusion =='failure' }}
         run: echo "failure launch"
   second:
     runs-on: ubuntu-latest
