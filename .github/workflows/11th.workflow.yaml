@@ -7,6 +7,5 @@ jobs:
   job:
     runs-on: ubuntu-latest
     steps:
-      - name: first
-        if: ${{ env.global_for_wf == '10 text' }}
+      - name: try to launch
         run: echo "test was successful"
