@@ -1,5 +1,5 @@
 name: envs
-on: [push]
+on: [workflow_dispatch]
 run-name: test
 env:
   global_for_wf: "10 text"
