@@ -6,6 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: first_step
+        id: sleep
         run: sleep 30
       - name: runs on calcelled
         if: ${{ cancelled() }}
@@ -17,7 +18,7 @@ jobs:
         if: ${{ success() }}
         run: echo "success launch"
       - name: failure
-        if: ${{ failure() }}
+        if: ${{ failure() && steps.sleep.conclusion }}
         run: echo "failure launch"
   second:
     runs-on: ubuntu-latest
