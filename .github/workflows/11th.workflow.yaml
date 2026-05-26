@@ -12,3 +12,4 @@ jobs:
         run: |
           echo "test was successful"
           echo $GITHUB_ENV
+          cat $GITHUB_ENV
