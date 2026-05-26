@@ -1,0 +1,12 @@
+name: working with secrets
+on: [workflow_dispatch]
+run-name: secret
+jobs:
+  myjob:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: showing vars and secrets
+        run: |
+          echo '${{ secrets.PASSWORD }}'
+          echo '${{ vars.DATA }}'
