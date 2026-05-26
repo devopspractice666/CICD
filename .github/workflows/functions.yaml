@@ -7,7 +7,9 @@ jobs:
     steps:
       - name: first_step
         id: sleep
-        run: sleep 30
+        run: |
+          sleep 5
+          exit 1
       - name: runs on calcelled
         if: ${{ cancelled() }}
         run: echo "runs on cancelled"
