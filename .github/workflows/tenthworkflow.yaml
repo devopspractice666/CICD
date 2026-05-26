@@ -1,5 +1,5 @@
 name: tenth
-on: [push]
+on: [workflow_dispatch]
 run-name: testing header of commit 
 jobs:
   mujob:
