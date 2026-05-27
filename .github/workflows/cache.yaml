@@ -19,7 +19,7 @@ jobs:
         run: |
           npm ci
           ls node_modules | wc -l
-          echo ${{ toJson(steps.npm-cache.outcome.cache-hit) }}
+          echo ${{ toJson(steps.npm-cache.outputs) }}
       - name: checking version
         if: ${{ success() }}
         run: npm list angular --depth=0
