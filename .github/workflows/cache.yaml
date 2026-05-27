@@ -1,0 +1,26 @@
+name: working with cache 
+on: workflow_dispatch
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: working with cache
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules
+            ${{ runner.os }}
+      - name: install dependencies
+        run: |
+          npm ci
+          ls node_modules | wc -l
+          echo ${{ toJson(steps.npm-cache.outcome) }}
+      - name: checking version
+        if: ${{ success() }}
+        run: npm list angular --depth=0
+
