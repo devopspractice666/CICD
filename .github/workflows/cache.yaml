@@ -20,6 +20,7 @@ jobs:
           npm ci
           ls node_modules | wc -l
           echo '${{ toJson(steps.npm-cache.outputs) }}'
+          ls -a 
       - name: checking version
         if: ${{ success() }}
         run: npm list
