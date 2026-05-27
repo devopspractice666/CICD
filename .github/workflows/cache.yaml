@@ -22,5 +22,4 @@ jobs:
           echo '${{ toJson(steps.npm-cache.outputs) }}'
       - name: checking version
         if: ${{ success() }}
-        run: npm list angular --depth=0
-
+        run: npm list
