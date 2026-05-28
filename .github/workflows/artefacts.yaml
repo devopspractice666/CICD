@@ -14,6 +14,7 @@ jobs:
               name: info
               path: art.txt
     changing_art:
+        needs: making_art
         runs-on: ubuntu-latest
         steps:
           - name: download
@@ -33,6 +34,7 @@ jobs:
               name: info
               path: art.txt
     showing_results:
+        needs: changing_art
         runs-on: ubuntu-latest
         steps:
           - name: upload
