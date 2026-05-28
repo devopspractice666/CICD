@@ -1,0 +1,44 @@
+name: working with arts
+on: workflow_dispatch
+jobs:
+    making_art:
+        runs-on: ubuntu-latest
+        steps:
+          - name: generate file
+            run: |
+              touch art.txt
+              echo "this is info to put inside art" >> art.txt
+          - name: upload art
+            uses: actions/upload-artifact@v4
+            with:
+              name: info
+              path: art.txt
+    changing_art:
+        runs-on: ubuntu-latest
+        steps:
+          - name: download
+            uses: actions/download-artifact@v4
+            with:
+              name: info
+              path: .
+          - name: showing info
+            run: |
+              ls -la
+              cat art.txt
+          - name: changing file
+            run: echo "additional info from next job" >> art.txt
+          - name: upload changed art
+            uses: actions/upload-artifact@v4
+            with:
+              name: info
+              path: art.txt
+    showing_results:
+        runs-on: ubuntu-latest
+        steps:
+          - name: upload
+            uses: actions/upload-artifact@v4
+            with:
+              name: info
+              path: art.txt
+          - name: cat file
+            run: cat art.txt
