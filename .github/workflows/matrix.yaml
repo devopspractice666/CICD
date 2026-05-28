@@ -16,11 +16,14 @@ jobs:
                node: 21
                additional: true #дополнительное поле 
         fail-fast: false #останавливать воркфлоу при первой ошибке
-        max-parallel: 3 #е более 3 джоб параллельно
+        max-parallel: 3 #не более 3 джоб параллельно
       continue-on-error: true
       runs-on: ${{ matrix.os }}
       steps:
+        - name: Setup Node
+          uses: actions/setup-node@v4
+          with:
+            node-version: ${{ matrix.node }}
         - name: info
           run: |
-            node --verion
-     
+            node --version
