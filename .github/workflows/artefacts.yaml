@@ -37,8 +37,8 @@ jobs:
         needs: changing_art
         runs-on: ubuntu-latest
         steps:
-          - name: upload
-            uses: actions/upload-artifact@v4
+          - name: download
+            uses: actions/download-artifact@v4
             with:
               name: info
               path: art.txt
