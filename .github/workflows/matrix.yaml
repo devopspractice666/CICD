@@ -1,0 +1,26 @@
+name: working with matrix
+on: workflow_dispatch
+jobs:
+    test:
+      strategy:
+        matrix:
+          os: [ubuntu-latest, windows-latest, macos-latest]
+          node: [16, 18, 20]
+          exclude: #исключение из декартова произведения
+            - os: windows-latest
+              node: 18
+            - os: macos-latest
+              node: 16
+          include:
+             - os: ubuntu-latest
+               node: 21
+               additional: true #дополнительное поле 
+        fail-fast: false #останавливать воркфлоу при первой ошибке
+        max-parallel: 3 #е более 3 джоб параллельно
+      continue-on-error: true
+      runs-on: ${{ matrix.os }}
+      steps:
+        - name: info
+          run: |
+            node --verion
+     
