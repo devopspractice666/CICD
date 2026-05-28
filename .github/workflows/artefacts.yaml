@@ -41,6 +41,6 @@ jobs:
             uses: actions/download-artifact@v4
             with:
               name: info
-              path: art.txt
+              path: .
           - name: cat file
             run: cat art.txt
