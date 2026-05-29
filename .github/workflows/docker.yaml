@@ -10,6 +10,6 @@ jobs:
         ports:
           - 80:80
     steps:
-      - name: Проверяем nginx через alpine
+      - name: Проверяем nginx
         run: |
-          docker run --rm --network host alpine:latest curl http://localhost:80
+          curl http://localhost:80
