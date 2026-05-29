@@ -1,4 +1,4 @@
-name: test container network
+name: working with docket, services and http
 on: workflow_dispatch
 
 jobs:
