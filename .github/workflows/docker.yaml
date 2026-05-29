@@ -1,15 +1,36 @@
-name: working with docker
+name: test container network
 on: workflow_dispatch
 
 jobs:
-  with-services:
+  test-connection:
     runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
     services:
       web:
         image: nginx:alpine
-        ports:
-          - 80:80
+        options: >-
+          --health-cmd "curl --fail http://localhost:80 || exit 1"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
     steps:
-      - name: Проверяем nginx
+      - name: Установка curl в alpine
         run: |
-          curl http://localhost:80
+          apk add --no-cache curl
+      
+      - name: Проверка через имя сервиса 'web'
+        run: |
+          echo "Пробуем подключиться к http://web:80"
+          curl -I http://web:80
+      
+      - name: Детальная проверка
+        run: |
+          echo "=== Информация о сети ==="
+          cat /etc/hosts
+          echo ""
+          echo "=== Пинг до сервиса web ==="
+          ping -c 2 web || true
+          echo ""
+          echo "=== Полный ответ от nginx ==="
+          curl http://web:80
