@@ -4,36 +4,12 @@ on: workflow_dispatch
 jobs:
   with-services:
     runs-on: ubuntu-latest
-    container:
-      image: alpine:latest
-      options: --network container:web  # Подключаемся к сети сервиса web
     services:
       web:
         image: nginx:alpine
         ports:
           - 80:80
-        options: >-
-          --health-cmd "curl --fail http://localhost:80 || exit 1"
-          --health-interval 5s
-          --health-timeout 3s
-          --health-retries 5
     steps:
-      - name: Установка curl
+      - name: Проверяем nginx через alpine
         run: |
-          apk add --no-cache curl
-      
-      - name: Ждём готовности nginx
-        run: |
-          echo "Ожидаем запуска nginx..."
-          for i in 1 2 3 4 5 6 7 8 9 10; do
-            if curl -s -I http://web:80 > /dev/null 2>&1; then
-              echo "✅ nginx готов!"
-              break
-            fi
-            echo "Попытка $i: nginx ещё не готов, ждём..."
-            sleep 2
-          done
-      
-      - name: Проверяем доступ к сервису
-        run: |
-          curl -I http://web:80
+          docker run --rm --network host alpine:latest curl http://localhost:80
