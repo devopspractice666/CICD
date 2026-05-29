@@ -1,0 +1,14 @@
+name: calling wf
+on: 
+    workflow_dispatch:
+      inputs:
+        title:
+          description: "custom title"
+          type: string
+          default: "testing text title"
+          required: false
+jobs:
+  call-workflow:
+    uses: ./.github/workflows/workflow.yaml
+    with:
+      title: ${{ inputs.title }}

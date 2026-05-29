@@ -1,0 +1,7 @@
+взаимодействия между воркфлоу:
+
+нужен тригер на вызываемом воркфлоу 
+on.workflow_call.inputs.title.desctiption
+on.workflow_call.inputs.title.type
+on.workflow_call.inputs.title.default
+on.workflow_call.inputs.title.required
