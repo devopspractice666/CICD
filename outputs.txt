@@ -1,0 +1,75 @@
+# GitHub Actions Outputs — Шпаргалка
+
+## Что такое outputs?
+Механизм передачи данных между **джобами** (не шагами!) в GitHub Actions.
+
+## Два уровня outputs
+
+### 1. Между шагами внутри одной джобы
+```yaml
+steps:
+  - id: calc
+    run: echo "value=42" >> $GITHUB_OUTPUT
+  - run: echo "${{ steps.calc.outputs.value }}"
+```
+**❌ НЕ нужен outputs на уровне джобы**
+
+### 2. Между разными джобами
+```yaml
+jobs:
+  job1:
+    outputs:                          # ← ОБЯЗАТЕЛЬНО!
+      data: ${{ steps.gen.outputs.data }}
+    steps:
+      - id: gen
+        run: echo "data=hello" >> $GITHUB_OUTPUT
+  
+  job2:
+    needs: job1                       # ← ОБЯЗАТЕЛЬНО!
+    steps:
+      - run: echo "${{ needs.job1.outputs.data }}"
+```
+**✅ НУЖЕН outputs на уровне джобы**
+
+## Ключевые правила
+
+| Что | Можно | Нельзя |
+|-----|-------|--------|
+| Размер | до 1 MB на все outputs | больше 1 MB |
+| Количество | до 50 outputs на джобу | больше 50 |
+| Тип данных | только строки | объекты, массивы, JSON |
+| Пробелы | в значении можно | в имени переменной ❌ |
+
+## Запись значения
+```bash
+echo "имя_переменной=значение" >> $GITHUB_OUTPUT
+```
+
+## Чтение значения
+- **В той же джобе:** `${{ steps.id.outputs.имя }}`
+- **Из другой джобы:** `${{ needs.имя_джобы.outputs.имя }}`
+
+## Типичные ошибки
+```yaml
+# ❌ Забыл outputs на уровне джобы
+job1:
+  steps:
+    - run: echo "x=1" >> $GITHUB_OUTPUT
+  # нет outputs: секции!
+
+# ❌ Забыл needs
+job2:
+  steps:
+    - run: echo "${{ needs.job1.outputs.x }}"  # ошибка!
+
+# ❌ Пробел в имени
+echo "my var=123" >> $GITHUB_OUTPUT  # не работает
+
+# ✅ Правильно
+echo "my_var=123" >> $GITHUB_OUTPUT
+```
+
+## Итог
+- **Шаг → шаг:** не нужен outputs на уровне джобы
+- **Джоба → джоба:** нужны `outputs:` и `needs:`
+- Outputs — это **строки**, не файлы (для файлов есть artifacts)

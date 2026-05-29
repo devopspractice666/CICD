@@ -5,3 +5,40 @@ on.workflow_call.inputs.title.desctiption
 on.workflow_call.inputs.title.type
 on.workflow_call.inputs.title.default
 on.workflow_call.inputs.title.required
+все как и инпуты workflow_dispatch
+
+jobs.<job name>.uses -- использование другого воркфлоу
+with.title -- значения из инпутов вызываемого воркфлоу
+
+
+в on.workflow_call и dispatch можно передавать секреты secrets:
+ при использовании вф из другого репозитория в uses пишется:
+ вместо . используется id репозитория 
+ uses: devopspractice666/<name>/.github/workflows/<name>.yaml
+ secrets:
+   <секрет>: ${{ secrets.<секрет> }}
+
+ЗНАЧИТ ПРИ ВЫЗОВЕ REUSABLE воркфлоу используй как входной параметр
+то что пришло в инпуты вызывающего воркфлоу
+
+jobs:
+  call-workflow:
+    uses: ./.github/workflows/reusable.yaml
+    with:
+      title: ${{ inputs.title }}
+    secrets:
+      api_key: ${{ secrets.MY_API_KEY }}
+      token: ${{ secrets.GITHUB_TOKEN }}
+
+
+все происходит в пределах репозитория который выполняет вф,
+просто берет инструкции из удаленного репозитория если брать вф с удаленки
+
+
+передача output от джобы всему вф и получение в другом вф 
+через needs.<name>.outputs.<variable name>
+
+$GITHUB_OUTPUT -- временный файл на раннере для общения переменных между шагами
+(между джобами не работает)
+можно использовать оутпут между джобами но нужно объявить на уровне джоб
+jobs.<job name>.outputs: <name>: ${{ steps.<step id>.outputs.<name> }}

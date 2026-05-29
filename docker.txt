@@ -1,0 +1,237 @@
+# GitHub Actions: Docker, Контейнеры и Services — Шпаргалка
+
+## Зачем нужны контейнеры в GitHub Actions?
+
+Контейнеры позволяют запускать ваш CI/CD код в **изолированном, воспроизводимом окружении** с точно заданными зависимостями.
+
+### Проблема без контейнера:
+```yaml
+steps:
+  - run: python --version  # версия зависит от раннера!
+```
+
+### Решение с контейнером:
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: python:3.11-slim  # фиксированная версия
+    steps:
+      - run: python --version  # всегда 3.11
+```
+
+---
+
+## Поле `container` — основные подполя
+
+```yaml
+jobs:
+  job_name:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.11-slim        # обязательное: образ Docker
+      credentials:                    # опционально: для приватных registry
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PAT }}
+      env:                            # опционально: переменные окружения
+        DEBUG: true
+        API_KEY: ${{ secrets.API_KEY }}
+      ports:                          # опционально: проброс портов
+        - 8080:80
+      volumes:                        # опционально: монтирование томов
+        - /data:/app/data
+      options:                        # опционально: доп. параметры docker run
+        --cpus 2 --memory 4g
+```
+
+### Полный пример:
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: node:20-alpine
+      env:
+        NODE_ENV: test
+      volumes:
+        - /cache:/root/.npm
+      options: --user 1001
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm test
+```
+
+---
+
+## Поле `services` — для вспомогательных контейнеров
+
+`services` запускают **дополнительные контейнеры** рядом с вашим основным (база данных, Redis, Selenium, и т.д.).
+
+### Когда нужны services?
+- Тестируете код, который обращается к **базе данных**
+- Нужен **кэш** (Redis)
+- Нужен **Selenium** для браузерных тестов
+- Любой сервис, без которого ваш код не работает
+
+### Синтаксис:
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: python:3.11
+    services:
+      postgres:                       # имя сервиса
+        image: postgres:16            # образ
+        env:                          # переменные окружения для сервиса
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: mydb
+        ports:                        # проброс портов
+          - 5432:5432
+        options: >-                   # доп. параметры
+          --health-cmd "pg_isready"
+          --health-interval 10s
+    
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+    
+    steps:
+      - name: Подключаемся к БД
+        run: |
+          # Доступ к сервису через localhost
+          psql -h localhost -U postgres -d mydb -c "SELECT 1"
+```
+
+### Как получить доступ к сервису из контейнера?
+
+| Ваш контейнер | Доступ к services через |
+|---------------|------------------------|
+| **Есть** `container:` | `localhost` или `127.0.0.1` |
+| **Нет** `container:` | `localhost` или `127.0.0.1` |
+
+```yaml
+# Оба варианта работают
+- run: psql -h localhost -U postgres -c "SELECT 1"
+- run: psql -h 127.0.0.1 -U postgres -c "SELECT 1"
+```
+
+---
+
+## Полный рабочий пример
+
+```yaml
+name: Docker Test
+on: push
+
+jobs:
+  test-with-postgres:
+    runs-on: ubuntu-latest
+    
+    container:
+      image: python:3.11-slim
+      env:
+        DATABASE_URL: postgresql://postgres:test@localhost/mydb
+      volumes:
+        - /tmp/cache:/root/.cache
+      options: --memory 2g
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: mydb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Установка зависимостей
+        run: |
+          apt-get update && apt-get install -y postgresql-client
+          pip install psycopg2
+      
+      - name: Ждём PostgreSQL
+        run: |
+          until pg_isready -h localhost -U postgres; do
+            sleep 1
+          done
+      
+      - name: Запуск тестов
+        run: python test_db.py
+        env:
+          DB_PASSWORD: test
+```
+
+---
+
+## Сравнение: container vs services
+
+| | **container** | **services** |
+|--|---------------|--------------|
+| **Назначение** | Окружение для вашего кода | Вспомогательные сервисы |
+| **Сколько может быть** | 1 на джобу | Несколько |
+| **Доступ к вашему коду** | ✅ Да (чекнутый код) | ❌ Нет |
+| **Выполняет ваши шаги** | ✅ Да | ❌ Нет |
+| **Примеры** | python, node, java | postgres, redis, mysql, selenium |
+
+---
+
+## Важные нюансы
+
+### 1. Контейнер не наследует переменные раннера
+```yaml
+- name: Это НЕ сработает
+  run: echo $GITHUB_TOKEN  # переменной нет в контейнере
+
+- name: Нужно передать явно
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run: echo $GITHUB_TOKEN
+```
+
+### 2. Для проброса локальных портов
+```yaml
+container:
+  ports:
+    - 8080:80  # порт_хоста:порт_контейнера
+```
+
+### 3. Healthcheck для services
+```yaml
+services:
+  postgres:
+    options: >-
+      --health-cmd "pg_isready"
+      --health-interval 10s
+      --health-retries 5
+```
+
+---
+
+## Когда НЕ нужен контейнер?
+
+- Код на **JavaScript/TypeScript** — раннер уже имеет Node
+- Используете **готовые actions** (actions/checkout, actions/setup-python)
+- Простые bash-скрипты без специфических зависимостей
+
+---
+
+## Итог
+
+| Ключевое слово | Назначение |
+|----------------|------------|
+| `container` | Запуск вашего кода в изолированном окружении |
+| `services` | Запуск вспомогательных сервисов (БД, кэш) |
+| `image` | Какой Docker-образ использовать |
+| `env` | Переменные окружения для контейнера |
+| `ports` | Проброс портов между хостом и контейнером |
+| `volumes` | Монтирование томов для данных |
+| `options` | Дополнительные параметры `docker run` |

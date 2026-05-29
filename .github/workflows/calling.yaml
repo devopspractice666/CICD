@@ -1,6 +1,6 @@
 name: calling wf
 on: 
-    workflow_dispatch:
+    workflow_dispatch: #это вводит пользователь
       inputs:
         title:
           description: "custom title"
@@ -11,4 +11,4 @@ jobs:
   call-workflow:
     uses: ./.github/workflows/reusable.yaml
     with:
-      title: ${{ inputs.title }}
+      title: ${{ inputs.title }} #это передается в вызываемый вф

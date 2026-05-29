@@ -1,0 +1,34 @@
+name: working with containers
+on: workflow_dispatch
+jobs:
+  container:
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
+      env:
+        MY_NAME: "mishka"
+    steps:
+      - name: first step
+        run: | 
+          echo "os: $(cat /etc/os-release)"
+      - name: creating file 
+        run: |
+          touch newfile.txt
+          ls -la
+  with-services: #сервисы это вспомогательные конты на той же тачке
+    runs-on: ubuntu-latest
+    container:
+      image: alpine-latest
+    services:
+      web:
+        image: nginx:alpine
+        ports: 
+          - 80:80
+    steps:
+      - name: nginx check
+        run: |
+          apk add --no-cache curl
+          curl -I http://localhost:80
+
+
+    
