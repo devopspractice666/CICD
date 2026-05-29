@@ -6,6 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: alpine:latest
+      options: --network container:web  # Подключаемся к сети сервиса web
     services:
       web:
         image: nginx:alpine
@@ -35,4 +36,4 @@ jobs:
       
       - name: Проверяем доступ к сервису
         run: |
-          curl -I http://localhost:80
+          curl -I http://web:80
