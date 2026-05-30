@@ -11,4 +11,4 @@ jobs:
   call-workflow:
     uses: ./.github/workflows/reusable.yaml
     with:
-      title: ${{ inputs.title }} #это передается в вызываемый вф
+      title: watafa anyway #это передается в вызываемый вф
