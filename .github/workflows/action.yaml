@@ -9,3 +9,5 @@ jobs:
       
       - name: using action
         uses: ./.github/actions/mysteps
+        with: 
+          additional: 'some text'

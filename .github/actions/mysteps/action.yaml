@@ -1,5 +1,11 @@
 name: 'just any commands to test'
 description: 'some necessary desctiption here'
+inputs:
+  additional: 
+    required: true #не запустится экшн есил не передать в with
+    description: "передаем через with"
+    default: "text by default"
+
 runs:
   using: 'composite' 
   steps:
@@ -8,4 +14,7 @@ runs:
       shell: bash
     - name: showing files
       run: ls -la 
+      shell: bash
+    - name: showing input
+      run: echo ${{ inputs.additional }}
       shell: bash
