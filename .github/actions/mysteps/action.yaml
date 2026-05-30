@@ -4,7 +4,7 @@ inputs:
   additional: 
     required: true #не запустится экшн есил не передать в with
     description: "передаем через with"
-    default: "text by default"
+    default: text by default
 
 runs:
   using: 'composite' 
