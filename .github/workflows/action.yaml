@@ -1,0 +1,8 @@
+name: working with my action
+on: workflow_dispatch
+jobs:
+  myjob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: using action
+        uses: ./.github/actions/mysteps #мой локальный action

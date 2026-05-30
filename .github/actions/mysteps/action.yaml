@@ -1,0 +1,11 @@
+name: 'just any commands to test'
+description: 'some necessary desctiption here'
+runs:
+  using: 'composite' 
+  steps:
+    - name: first step echo
+      run: echo first step
+      shell: bash
+    - name: showing files
+      run: ls -la 
+      shell: bash
