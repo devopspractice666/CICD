@@ -4,5 +4,8 @@ jobs:
   myjob:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: using action
-        uses: ./.github/actions/mysteps #мой локальный action
+        uses: ./.github/actions/mysteps
